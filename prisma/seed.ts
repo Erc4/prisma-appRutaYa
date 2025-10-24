@@ -6,9 +6,9 @@ async function seed() {
   // Create roles first
   await prisma.roles.createMany({
     data: [
-      { nombre: "Admin" },
-      { nombre: "Conductor" },
-      { nombre: "Usuario" },
+      { rol: "Admin" },
+      { rol: "Conductor" },
+      { rol: "Usuario" },
     ],
     skipDuplicates: true,
   });

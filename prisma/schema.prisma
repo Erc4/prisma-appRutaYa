@@ -81,6 +81,7 @@ model Turnos {
   vehiculo Vehiculos @relation(fields: [id_vehiculo], references: [id])
 
   reportes Reportes[]
+  ubicaciones Ubicaciones[]
 }
 
 model Tipos_reporte {
@@ -103,4 +104,16 @@ model Reportes {
   vehiculo Vehiculos @relation(fields: [id_vehiculo], references: [id])
   turno Turnos @relation(fields: [id_turno], references: [id])
   tipo Tipos_reporte @relation(fields: [id_tipo_reporte], references: [id])
+}
+
+model Ubicaciones {
+  id          Int      @id @default(autoincrement())
+  id_turno    Int
+  latitud     Float
+  longitud    Float
+  timestamp   DateTime @default(now())
+  
+  turno       Turnos   @relation(fields: [id_turno], references: [id])
+  
+  @@index([id_turno, timestamp])
 }

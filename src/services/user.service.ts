@@ -3,7 +3,7 @@ import { prisma } from "../lib/prisma";
 type UsuarioCreate = {
   apellido_paterno: string;
   apellido_materno: string;
-  nombre: number; // según tu schema actual es Int
+  nombre: string; // según tu schema actual es Int
   id_rol: number;
   no_licencia?: number | null;
   id_ruta: number;
