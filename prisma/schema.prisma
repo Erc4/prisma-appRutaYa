@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -15,105 +9,81 @@ datasource db {
 }
 
 model Usuarios {
-  id Int @id @default(autoincrement())
+  id               Int        @id @default(autoincrement())
   apellido_paterno String
   apellido_materno String
-  nombre String
-  email String @unique
-  password String  @db.Text
-  id_rol Int
-  no_licencia Int?
-  id_ruta Int
-
-  // Relations
-  rol Roles @relation(fields: [id_rol], references: [id])
-  ruta Rutas @relation(fields: [id_ruta], references: [id])
-
-  turnos Turnos[]
-  reportes Reportes[]
+  nombre           String
+  email            String     @unique
+  password         String
+  id_rol           Int
+  no_licencia      Int?
+  id_ruta          Int
+  reportes         Reportes[]
+  turnos           Turnos[]
+  rol              Roles      @relation(fields: [id_rol], references: [id])
+  ruta             Rutas      @relation(fields: [id_ruta], references: [id])
 }
 
 model Roles {
-  id Int @id @default(autoincrement())
-  rol String @unique
-
+  id       Int        @id @default(autoincrement())
+  rol      String     @unique
   usuarios Usuarios[]
 }
 
 model Rutas {
-  id Int @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   descripcion String
-  id_punto_inicial Int
-  id_punto_final Int
-
-  puntos Puntos_ruta[]
-  usuarios Usuarios[]
+  activo      Boolean       @default(true)
+  nombre      String
+  puntos      Puntos_ruta[]
+  usuarios    Usuarios[]
 }
 
 model Puntos_ruta {
-  id Int @id @default(autoincrement())
-  id_ruta Int
-  altitud Float?
+  id       Int    @id @default(autoincrement())
+  id_ruta  Int
+  altitud  Float?
   longitud Float?
-
-  ruta Rutas @relation(fields: [id_ruta], references: [id])
+  ruta     Rutas  @relation(fields: [id_ruta], references: [id])
 }
 
 model Vehiculos {
-  id Int @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   no_placas String
   no_unidad String
   capacidad Int
-
-  turnos Turnos[]
-  reportes Reportes[]
+  reportes  Reportes[]
+  turnos    Turnos[]
 }
 
 model Turnos {
-  id Int @id @default(autoincrement())
-  id_chofer Int
+  id          Int        @id @default(autoincrement())
+  id_chofer   Int
   id_vehiculo Int
   descripcion String?
   hora_inicio DateTime?
-  hora_fin DateTime?
-
-  chofer Usuarios @relation(fields: [id_chofer], references: [id])
-  vehiculo Vehiculos @relation(fields: [id_vehiculo], references: [id])
-
-  reportes Reportes[]
-  ubicaciones Ubicaciones[]
+  hora_fin    DateTime?
+  reportes    Reportes[]
+  chofer      Usuarios   @relation(fields: [id_chofer], references: [id])
+  vehiculo    Vehiculos  @relation(fields: [id_vehiculo], references: [id])
 }
 
 model Tipos_reporte {
-  id Int @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   descripcion String
-
-  reportes Reportes[]
+  reportes    Reportes[]
 }
 
 model Reportes {
-  id Int @id @default(autoincrement())
-  id_chofer Int
-  id_vehiculo Int
-  id_turno Int
+  id              Int           @id @default(autoincrement())
+  id_chofer       Int
+  id_vehiculo     Int
+  id_turno        Int
   id_tipo_reporte Int
-  descripcion String
-  estado String
-
-  chofer Usuarios @relation(fields: [id_chofer], references: [id])
-  vehiculo Vehiculos @relation(fields: [id_vehiculo], references: [id])
-  turno Turnos @relation(fields: [id_turno], references: [id])
-  tipo Tipos_reporte @relation(fields: [id_tipo_reporte], references: [id])
-}
-
-model Ubicaciones {
-  id          Int      @id @default(autoincrement())
-  id_turno    Int
-  latitud     Float
-  longitud    Float
-  timestamp   DateTime @default(now())
-  
-  turno       Turnos   @relation(fields: [id_turno], references: [id])
-  
-  @@index([id_turno, timestamp])
+  descripcion     String
+  estado          String
+  chofer          Usuarios      @relation(fields: [id_chofer], references: [id])
+  tipo            Tipos_reporte @relation(fields: [id_tipo_reporte], references: [id])
+  turno           Turnos        @relation(fields: [id_turno], references: [id])
+  vehiculo        Vehiculos     @relation(fields: [id_vehiculo], references: [id])
 }
